@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie</title>
+    <style>
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        #container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            margin-left: 50px;
+        }
+
+        img {
+            width: 100%;
+            
+        }
+        #search_movie{
+            margin: 20px;
+        }
+        #container > div{
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+            /* border: 1px solid red; */
+            width: 70%;
+            margin-bottom: 20px;
+            background-color: whitesmoke;
+        }
+        p{
+            font-family: sans-serif;
+            font-weight: bold;
+            margin-left: 5px;
+            text-align: center;
+        }
+       
+    </style>
+</head>
+
+<body>
+    <input type="text" placeholder="Search movie" id="search_movie">
+    <button id="button" onclick="search()">Search</button>
+    <div id="container">
+    </div>
+
+</body>
+
+</html>
+<script>
+
+    let search_movie = document.getElementById("search_movie").value
+
+    let url = `https://www.omdbapi.com/?apikey=e3148ffb&s=avengers`
+
+    let container = document.getElementById("container")
+
+    async function getMovie() {
+        try {
+
+            let res = await fetch(url)
+
+            let data = await res.json()
+
+            appendsearch(data)
+
+            // appendsingleMovie(data)
+            // console.log(data);
+
+
+        }
+        catch (err) {
+
+            console.log(err);
+        }
+
+    }
+    getMovie()
+
+    function appendsearch(d) {
+        console.log(d);
+        container.textContent = ""
+        d.Search.forEach(function (item) {
+
+            let div = document.createElement("div")
+
+            let name = document.createElement("p")
+            name.textContent = item.Title
+
+            let image = document.createElement("img")
+            image.src = item.Poster
+
+            let release_date = document.createElement('p')
+            release_date.textContent = item.Released
+
+            let actors = document.createElement('p')
+            actors.textContent = item.Actors
+
+            let runtime = document.createElement('p')
+            runtime.textContent = item.Runtime
+
+            let rated = document.createElement('p')
+            rated.textContent = item.Rated
+
+            let year = document.createElement('p')
+            year.textContent = item.Year
+
+            div.append(image, name, year, actors, rated, runtime, release_date)
+
+            container.append(div)
+        });
+    }
+
+    function search() {
+        let movies = document.getElementById("search_movie").value
+
+        if (movies == "") {
+
+            alert("Please enter movie name")
+        }
+        else {
+            // console.log(movies);
+            // container.textContent = ""
+            url = `https://www.omdbapi.com/?apikey=e3148ffb&s=${movies}`
+
+            getMovie()
+            
+        }
+    }
+
+</script>
